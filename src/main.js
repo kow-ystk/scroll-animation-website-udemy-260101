@@ -2,7 +2,7 @@ import "./style.css";
 import * as THREE from "three";
 
 // canvas
-const canvas = document.querySelector("webgl");
+const canvas = document.querySelector("#webgl");
 
 // シーン
 const scene = new THREE.Scene();
