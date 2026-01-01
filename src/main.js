@@ -77,7 +77,7 @@ const scene = new THREE.Scene();
 const textureLoader = new THREE.TextureLoader();
 /** 背景用のテクスチャ */
 const bgTexture = textureLoader.load(
-  "bg/bg.jpg",
+  "bg.jpg",
   undefined, // onLoad
   undefined, // onProgress
   (error) => {
