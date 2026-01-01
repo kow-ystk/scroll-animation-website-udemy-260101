@@ -29,7 +29,7 @@ const ANIMATION_RANGES = {
   INTRO: { start: 0, end: 40 },
   ROTATION: { start: 40, end: 60 },
   CAMERA_MOVE: { start: 60, end: 80 },
-  FINAL_SPIN: { start: 80, end: 100 }
+  FINAL_SPIN: { start: 80, end: 100 },
 };
 
 // カメラの初期位置
@@ -83,11 +83,24 @@ const renderer = new THREE.WebGLRenderer({
 });
 
 // オブジェクトを作成
-const boxGeometry = new THREE.BoxGeometry(BOX_WIDTH, BOX_HEIGHT, BOX_DEPTH, BOX_SEGMENTS);
+const boxGeometry = new THREE.BoxGeometry(
+  BOX_WIDTH,
+  BOX_HEIGHT,
+  BOX_DEPTH,
+  BOX_SEGMENTS
+);
 const boxMaterial = new THREE.MeshNormalMaterial();
 const box = new THREE.Mesh(boxGeometry, boxMaterial);
-box.position.set(BOX_INITIAL_POSITION.x, BOX_INITIAL_POSITION.y, BOX_INITIAL_POSITION.z);
-box.rotation.set(BOX_INITIAL_ROTATION.x, BOX_INITIAL_ROTATION.y, BOX_INITIAL_ROTATION.z);
+box.position.set(
+  BOX_INITIAL_POSITION.x,
+  BOX_INITIAL_POSITION.y,
+  BOX_INITIAL_POSITION.z
+);
+box.rotation.set(
+  BOX_INITIAL_ROTATION.x,
+  BOX_INITIAL_ROTATION.y,
+  BOX_INITIAL_ROTATION.z
+);
 
 const torusGeometry = new THREE.TorusGeometry(
   TORUS_RADIUS,
@@ -97,7 +110,11 @@ const torusGeometry = new THREE.TorusGeometry(
 );
 const torusMaterial = new THREE.MeshNormalMaterial();
 const torus = new THREE.Mesh(torusGeometry, torusMaterial);
-torus.position.set(TORUS_INITIAL_POSITION.x, TORUS_INITIAL_POSITION.y, TORUS_INITIAL_POSITION.z);
+torus.position.set(
+  TORUS_INITIAL_POSITION.x,
+  TORUS_INITIAL_POSITION.y,
+  TORUS_INITIAL_POSITION.z
+);
 
 scene.add(box, torus);
 
@@ -139,8 +156,16 @@ animationScripts.push({
   end: ANIMATION_RANGES.INTRO.end,
   function() {
     setCameraToDefault();
-    box.position.z = lerp(-15, 2, scalePercent(ANIMATION_RANGES.INTRO.start, ANIMATION_RANGES.INTRO.end));
-    torus.position.z = lerp(10, -20, scalePercent(ANIMATION_RANGES.INTRO.start, ANIMATION_RANGES.INTRO.end));
+    box.position.z = lerp(
+      -15,
+      2,
+      scalePercent(ANIMATION_RANGES.INTRO.start, ANIMATION_RANGES.INTRO.end)
+    );
+    torus.position.z = lerp(
+      10,
+      -20,
+      scalePercent(ANIMATION_RANGES.INTRO.start, ANIMATION_RANGES.INTRO.end)
+    );
   },
 });
 
@@ -149,7 +174,14 @@ animationScripts.push({
   end: ANIMATION_RANGES.ROTATION.end,
   function() {
     setCameraToDefault();
-    box.rotation.z = lerp(1, Math.PI, scalePercent(ANIMATION_RANGES.ROTATION.start, ANIMATION_RANGES.ROTATION.end));
+    box.rotation.z = lerp(
+      1,
+      Math.PI,
+      scalePercent(
+        ANIMATION_RANGES.ROTATION.start,
+        ANIMATION_RANGES.ROTATION.end
+      )
+    );
   },
 });
 
@@ -158,9 +190,30 @@ animationScripts.push({
   end: ANIMATION_RANGES.CAMERA_MOVE.end,
   function() {
     camera.lookAt(box.position);
-    camera.position.x = lerp(0, -15, scalePercent(ANIMATION_RANGES.CAMERA_MOVE.start, ANIMATION_RANGES.CAMERA_MOVE.end));
-    camera.position.y = lerp(1, -15, scalePercent(ANIMATION_RANGES.CAMERA_MOVE.start, ANIMATION_RANGES.CAMERA_MOVE.end));
-    camera.position.z = lerp(10, 25, scalePercent(ANIMATION_RANGES.CAMERA_MOVE.start, ANIMATION_RANGES.CAMERA_MOVE.end));
+    camera.position.x = lerp(
+      0,
+      -15,
+      scalePercent(
+        ANIMATION_RANGES.CAMERA_MOVE.start,
+        ANIMATION_RANGES.CAMERA_MOVE.end
+      )
+    );
+    camera.position.y = lerp(
+      1,
+      -15,
+      scalePercent(
+        ANIMATION_RANGES.CAMERA_MOVE.start,
+        ANIMATION_RANGES.CAMERA_MOVE.end
+      )
+    );
+    camera.position.z = lerp(
+      10,
+      25,
+      scalePercent(
+        ANIMATION_RANGES.CAMERA_MOVE.start,
+        ANIMATION_RANGES.CAMERA_MOVE.end
+      )
+    );
   },
 });
 
@@ -168,17 +221,20 @@ animationScripts.push({
   start: ANIMATION_RANGES.FINAL_SPIN.start,
   end: ANIMATION_RANGES.FINAL_SPIN.end,
   function() {
-    const targetRotation = Math.PI * 2;
-    const progress = scalePercent(ANIMATION_RANGES.FINAL_SPIN.start, ANIMATION_RANGES.FINAL_SPIN.end);
-    box.rotation.x = lerp(box.rotation.x, targetRotation, progress);
-    box.rotation.y = lerp(box.rotation.y, targetRotation, progress);
+    const progress = scalePercent(
+      ANIMATION_RANGES.FINAL_SPIN.start,
+      ANIMATION_RANGES.FINAL_SPIN.end
+    );
+    box.rotation.x = lerp(BOX_INITIAL_ROTATION.x, Math.PI * 4, progress);
+    box.rotation.y = lerp(BOX_INITIAL_ROTATION.y, Math.PI * 4, progress);
   },
 });
 
 // アニメーションを開始
 function playScrollAnimation() {
   for (const animation of animationScripts) {
-    const isInRange = scrollPercent >= animation.start && scrollPercent <= animation.end;
+    const isInRange =
+      scrollPercent >= animation.start && scrollPercent <= animation.end;
     if (isInRange) {
       animation.function();
       break;
