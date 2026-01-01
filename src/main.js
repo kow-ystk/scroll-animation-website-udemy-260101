@@ -54,7 +54,7 @@ function lerp(x, y, a) {
 }
 
 function scalePercent(start, end) {
-  return (scrollParcent - start) / (end - start);
+  return (scrollPercent - start) / (end - start);
 }
 
 // スクロールアニメーション
@@ -104,15 +104,15 @@ animationScripts.push({
 // アニメーションを開始
 function playScrollAnimation() {
   animationScripts.forEach((animation) => {
-    if (scrollParcent >= animation.start && scrollParcent <= animation.end)
+    if (scrollPercent >= animation.start && scrollPercent <= animation.end)
       animation.function();
   });
 }
 
 // ブラウザのスクロール率を取得
-let scrollParcent = 0;
+let scrollPercent = 0;
 document.body.onscroll = () => {
-  scrollParcent =
+  scrollPercent =
     (document.documentElement.scrollTop /
       (document.documentElement.scrollHeight -
         document.documentElement.clientHeight)) *
