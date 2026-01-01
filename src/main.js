@@ -29,13 +29,14 @@ const ANIMATION_RANGES = {
   INTRO: { start: 0, end: 40 },
   ROTATION: { start: 40, end: 60 },
   CAMERA_MOVE: { start: 60, end: 80 },
-  FINAL_SPIN: { start: 80, end: 100 }
+  FINAL_SPIN: { start: 80, end: 100 },
 };
-
-const ROTATION_SPEED = 0.02;
 
 // カメラの初期位置
 const CAMERA_DEFAULT_POSITION = { x: 0, y: 1, z: 10 };
+
+// スクロール率
+let scrollPercent = 0;
 
 // ========================================
 // 初期化
@@ -64,8 +65,8 @@ scene.background = bgTexture;
 
 // サイズ
 const sizes = {
-  width: innerWidth,
-  height: innerHeight,
+  width: window.innerWidth,
+  height: window.innerHeight,
 };
 
 // カメラ
@@ -82,11 +83,24 @@ const renderer = new THREE.WebGLRenderer({
 });
 
 // オブジェクトを作成
-const boxGeometry = new THREE.BoxGeometry(BOX_WIDTH, BOX_HEIGHT, BOX_DEPTH, BOX_SEGMENTS);
+const boxGeometry = new THREE.BoxGeometry(
+  BOX_WIDTH,
+  BOX_HEIGHT,
+  BOX_DEPTH,
+  BOX_SEGMENTS
+);
 const boxMaterial = new THREE.MeshNormalMaterial();
 const box = new THREE.Mesh(boxGeometry, boxMaterial);
-box.position.set(BOX_INITIAL_POSITION.x, BOX_INITIAL_POSITION.y, BOX_INITIAL_POSITION.z);
-box.rotation.set(BOX_INITIAL_ROTATION.x, BOX_INITIAL_ROTATION.y, BOX_INITIAL_ROTATION.z);
+box.position.set(
+  BOX_INITIAL_POSITION.x,
+  BOX_INITIAL_POSITION.y,
+  BOX_INITIAL_POSITION.z
+);
+box.rotation.set(
+  BOX_INITIAL_ROTATION.x,
+  BOX_INITIAL_ROTATION.y,
+  BOX_INITIAL_ROTATION.z
+);
 
 const torusGeometry = new THREE.TorusGeometry(
   TORUS_RADIUS,
@@ -96,7 +110,11 @@ const torusGeometry = new THREE.TorusGeometry(
 );
 const torusMaterial = new THREE.MeshNormalMaterial();
 const torus = new THREE.Mesh(torusGeometry, torusMaterial);
-torus.position.set(TORUS_INITIAL_POSITION.x, TORUS_INITIAL_POSITION.y, TORUS_INITIAL_POSITION.z);
+torus.position.set(
+  TORUS_INITIAL_POSITION.x,
+  TORUS_INITIAL_POSITION.y,
+  TORUS_INITIAL_POSITION.z
+);
 
 scene.add(box, torus);
 
@@ -138,8 +156,16 @@ animationScripts.push({
   end: ANIMATION_RANGES.INTRO.end,
   function() {
     setCameraToDefault();
-    box.position.z = lerp(-15, 2, scalePercent(ANIMATION_RANGES.INTRO.start, ANIMATION_RANGES.INTRO.end));
-    torus.position.z = lerp(10, -20, scalePercent(ANIMATION_RANGES.INTRO.start, ANIMATION_RANGES.INTRO.end));
+    box.position.z = lerp(
+      -15,
+      2,
+      scalePercent(ANIMATION_RANGES.INTRO.start, ANIMATION_RANGES.INTRO.end)
+    );
+    torus.position.z = lerp(
+      10,
+      -20,
+      scalePercent(ANIMATION_RANGES.INTRO.start, ANIMATION_RANGES.INTRO.end)
+    );
   },
 });
 
@@ -148,7 +174,14 @@ animationScripts.push({
   end: ANIMATION_RANGES.ROTATION.end,
   function() {
     setCameraToDefault();
-    box.rotation.z = lerp(1, Math.PI, scalePercent(ANIMATION_RANGES.ROTATION.start, ANIMATION_RANGES.ROTATION.end));
+    box.rotation.z = lerp(
+      1,
+      Math.PI,
+      scalePercent(
+        ANIMATION_RANGES.ROTATION.start,
+        ANIMATION_RANGES.ROTATION.end
+      )
+    );
   },
 });
 
@@ -157,9 +190,30 @@ animationScripts.push({
   end: ANIMATION_RANGES.CAMERA_MOVE.end,
   function() {
     camera.lookAt(box.position);
-    camera.position.x = lerp(0, -15, scalePercent(ANIMATION_RANGES.CAMERA_MOVE.start, ANIMATION_RANGES.CAMERA_MOVE.end));
-    camera.position.y = lerp(1, -15, scalePercent(ANIMATION_RANGES.CAMERA_MOVE.start, ANIMATION_RANGES.CAMERA_MOVE.end));
-    camera.position.z = lerp(10, 25, scalePercent(ANIMATION_RANGES.CAMERA_MOVE.start, ANIMATION_RANGES.CAMERA_MOVE.end));
+    camera.position.x = lerp(
+      0,
+      -15,
+      scalePercent(
+        ANIMATION_RANGES.CAMERA_MOVE.start,
+        ANIMATION_RANGES.CAMERA_MOVE.end
+      )
+    );
+    camera.position.y = lerp(
+      1,
+      -15,
+      scalePercent(
+        ANIMATION_RANGES.CAMERA_MOVE.start,
+        ANIMATION_RANGES.CAMERA_MOVE.end
+      )
+    );
+    camera.position.z = lerp(
+      10,
+      25,
+      scalePercent(
+        ANIMATION_RANGES.CAMERA_MOVE.start,
+        ANIMATION_RANGES.CAMERA_MOVE.end
+      )
+    );
   },
 });
 
@@ -167,17 +221,31 @@ animationScripts.push({
   start: ANIMATION_RANGES.FINAL_SPIN.start,
   end: ANIMATION_RANGES.FINAL_SPIN.end,
   function() {
-    box.rotation.x += ROTATION_SPEED;
-    box.rotation.y += ROTATION_SPEED;
+    const progress = scalePercent(
+      ANIMATION_RANGES.FINAL_SPIN.start,
+      ANIMATION_RANGES.FINAL_SPIN.end
+    );
+    box.rotation.x = lerp(BOX_INITIAL_ROTATION.x, Math.PI * 4, progress);
+    box.rotation.y = lerp(BOX_INITIAL_ROTATION.y, Math.PI * 4, progress);
   },
 });
 
 // アニメーションを開始
 function playScrollAnimation() {
-  animationScripts.forEach((animation) => {
-    if (scrollPercent >= animation.start && scrollPercent <= animation.end)
+  for (const animation of animationScripts) {
+    const isInRange =
+      scrollPercent >= animation.start && scrollPercent <= animation.end;
+    if (isInRange) {
       animation.function();
-  });
+      break;
+    }
+  }
+
+  // 最下部到達後は自動回転を継続
+  if (scrollPercent >= 100) {
+    box.rotation.x += 0.01;
+    box.rotation.y += 0.01;
+  }
 }
 
 // ========================================
@@ -185,17 +253,17 @@ function playScrollAnimation() {
 // ========================================
 
 // ブラウザのスクロール率を取得
-let scrollPercent = 0;
-window.addEventListener("scroll", () => {
+const handleScroll = () => {
   scrollPercent =
     (document.documentElement.scrollTop /
       (document.documentElement.scrollHeight -
         document.documentElement.clientHeight)) *
     100;
-});
+};
+window.addEventListener("scroll", handleScroll);
 
 // ブラウザのリサイズ操作
-window.addEventListener("resize", () => {
+const handleResize = () => {
   sizes.width = window.innerWidth;
   sizes.height = window.innerHeight;
 
@@ -204,7 +272,8 @@ window.addEventListener("resize", () => {
 
   renderer.setSize(sizes.width, sizes.height);
   renderer.setPixelRatio(window.devicePixelRatio);
-});
+};
+window.addEventListener("resize", handleResize);
 
 // ========================================
 // アニメーションループ
@@ -216,4 +285,31 @@ const tick = () => {
   renderer.render(scene, camera);
 };
 
+// 初回レンダリング
+setCameraToDefault();
+renderer.render(scene, camera);
+
 tick();
+
+// ========================================
+// クリーンアップ
+// ========================================
+
+/**
+ * リソースを解放してメモリリークを防ぐ
+ * SPAなどでコンポーネントをアンマウントする際に呼び出す
+ */
+export function cleanup() {
+  // イベントリスナーの削除
+  window.removeEventListener("scroll", handleScroll);
+  window.removeEventListener("resize", handleResize);
+
+  // ジオメトリとマテリアルの破棄
+  boxGeometry.dispose();
+  boxMaterial.dispose();
+  torusGeometry.dispose();
+  torusMaterial.dispose();
+
+  // レンダラーの破棄
+  renderer.dispose();
+}
