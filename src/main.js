@@ -7,6 +7,11 @@ const canvas = document.querySelector("#webgl");
 // シーン
 const scene = new THREE.Scene();
 
+// 背景用のテクスチャ
+const textureLoader = new THREE.TextureLoader();
+const bgTexture = textureLoader.load("bg/bg.jpg");
+scene.background = bgTexture;
+
 // サイズ
 const sizes = {
   width: innerWidth,
