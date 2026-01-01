@@ -62,8 +62,8 @@ scene.background = bgTexture;
 
 // サイズ
 const sizes = {
-  width: innerWidth,
-  height: innerHeight,
+  width: window.innerWidth,
+  height: window.innerHeight,
 };
 
 // カメラ
