@@ -32,8 +32,6 @@ const ANIMATION_RANGES = {
   FINAL_SPIN: { start: 80, end: 100 }
 };
 
-const ROTATION_SPEED = 0.02;
-
 // カメラの初期位置
 const CAMERA_DEFAULT_POSITION = { x: 0, y: 1, z: 10 };
 
@@ -167,8 +165,10 @@ animationScripts.push({
   start: ANIMATION_RANGES.FINAL_SPIN.start,
   end: ANIMATION_RANGES.FINAL_SPIN.end,
   function() {
-    box.rotation.x += ROTATION_SPEED;
-    box.rotation.y += ROTATION_SPEED;
+    const targetRotation = Math.PI * 2;
+    const progress = scalePercent(ANIMATION_RANGES.FINAL_SPIN.start, ANIMATION_RANGES.FINAL_SPIN.end);
+    box.rotation.x = lerp(box.rotation.x, targetRotation, progress);
+    box.rotation.y = lerp(box.rotation.y, targetRotation, progress);
   },
 });
 
