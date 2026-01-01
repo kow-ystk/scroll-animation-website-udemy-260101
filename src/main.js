@@ -188,16 +188,17 @@ function playScrollAnimation() {
 // ========================================
 
 // ブラウザのスクロール率を取得
-window.addEventListener("scroll", () => {
+const handleScroll = () => {
   scrollPercent =
     (document.documentElement.scrollTop /
       (document.documentElement.scrollHeight -
         document.documentElement.clientHeight)) *
     100;
-});
+};
+window.addEventListener("scroll", handleScroll);
 
 // ブラウザのリサイズ操作
-window.addEventListener("resize", () => {
+const handleResize = () => {
   sizes.width = window.innerWidth;
   sizes.height = window.innerHeight;
 
@@ -206,7 +207,8 @@ window.addEventListener("resize", () => {
 
   renderer.setSize(sizes.width, sizes.height);
   renderer.setPixelRatio(window.devicePixelRatio);
-});
+};
+window.addEventListener("resize", handleResize);
 
 // ========================================
 // アニメーションループ
@@ -223,3 +225,26 @@ setCameraToDefault();
 renderer.render(scene, camera);
 
 tick();
+
+// ========================================
+// クリーンアップ
+// ========================================
+
+/**
+ * リソースを解放してメモリリークを防ぐ
+ * SPAなどでコンポーネントをアンマウントする際に呼び出す
+ */
+export function cleanup() {
+  // イベントリスナーの削除
+  window.removeEventListener("scroll", handleScroll);
+  window.removeEventListener("resize", handleResize);
+
+  // ジオメトリとマテリアルの破棄
+  boxGeometry.dispose();
+  boxMaterial.dispose();
+  torusGeometry.dispose();
+  torusMaterial.dispose();
+
+  // レンダラーの破棄
+  renderer.dispose();
+}
