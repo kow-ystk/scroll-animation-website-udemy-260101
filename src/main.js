@@ -126,6 +126,10 @@ function setCameraToDefault() {
   );
 }
 
+// ========================================
+// アニメーション設定
+// ========================================
+
 // スクロールアニメーション
 const animationScripts = [];
 
@@ -189,14 +193,6 @@ window.addEventListener("scroll", () => {
         document.documentElement.clientHeight)) *
     100;
 });
-// アニメーション
-const tick = () => {
-  window.requestAnimationFrame(tick);
-  playScrollAnimation();
-  renderer.render(scene, camera);
-};
-
-tick();
 
 // ブラウザのリサイズ操作
 window.addEventListener("resize", () => {
@@ -209,3 +205,15 @@ window.addEventListener("resize", () => {
   renderer.setSize(sizes.width, sizes.height);
   renderer.setPixelRatio(window.devicePixelRatio);
 });
+
+// ========================================
+// アニメーションループ
+// ========================================
+
+const tick = () => {
+  window.requestAnimationFrame(tick);
+  playScrollAnimation();
+  renderer.render(scene, camera);
+};
+
+tick();
