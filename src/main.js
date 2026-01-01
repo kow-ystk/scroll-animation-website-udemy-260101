@@ -177,10 +177,13 @@ animationScripts.push({
 
 // アニメーションを開始
 function playScrollAnimation() {
-  animationScripts.forEach((animation) => {
-    if (scrollPercent >= animation.start && scrollPercent <= animation.end)
+  for (const animation of animationScripts) {
+    const isInRange = scrollPercent >= animation.start && scrollPercent <= animation.end;
+    if (isInRange) {
       animation.function();
-  });
+      break;
+    }
+  }
 }
 
 // ========================================
