@@ -240,6 +240,12 @@ function playScrollAnimation() {
       break;
     }
   }
+
+  // 最下部到達後は自動回転を継続
+  if (scrollPercent >= 100) {
+    box.rotation.x += 0.01;
+    box.rotation.y += 0.01;
+  }
 }
 
 // ========================================
