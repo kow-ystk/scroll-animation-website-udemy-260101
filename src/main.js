@@ -35,6 +35,9 @@ const ANIMATION_RANGES = {
 // カメラの初期位置
 const CAMERA_DEFAULT_POSITION = { x: 0, y: 1, z: 10 };
 
+// スクロール率
+let scrollPercent = 0;
+
 // ========================================
 // 初期化
 // ========================================
@@ -185,7 +188,6 @@ function playScrollAnimation() {
 // ========================================
 
 // ブラウザのスクロール率を取得
-let scrollPercent = 0;
 window.addEventListener("scroll", () => {
   scrollPercent =
     (document.documentElement.scrollTop /
