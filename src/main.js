@@ -216,4 +216,8 @@ const tick = () => {
   renderer.render(scene, camera);
 };
 
+// 初回レンダリング
+setCameraToDefault();
+renderer.render(scene, camera);
+
 tick();
