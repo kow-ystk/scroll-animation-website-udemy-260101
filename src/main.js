@@ -43,13 +43,23 @@ const CAMERA_DEFAULT_POSITION = { x: 0, y: 1, z: 10 };
 
 // canvas
 const canvas = document.querySelector("#webgl");
+if (!canvas) {
+  throw new Error("Canvas element with id 'webgl' not found");
+}
 
 // シーン
 const scene = new THREE.Scene();
 
 // 背景用のテクスチャ
 const textureLoader = new THREE.TextureLoader();
-const bgTexture = textureLoader.load("bg/bg.jpg");
+const bgTexture = textureLoader.load(
+  "bg/bg.jpg",
+  undefined, // onLoad
+  undefined, // onProgress
+  (error) => {
+    console.error("背景テクスチャの読み込みに失敗しました:", error);
+  }
+);
 scene.background = bgTexture;
 
 // サイズ
