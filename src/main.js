@@ -166,15 +166,19 @@ function playScrollAnimation() {
   });
 }
 
+// ========================================
+// イベントリスナー
+// ========================================
+
 // ブラウザのスクロール率を取得
 let scrollPercent = 0;
-document.body.onscroll = () => {
+document.body.addEventListener("scroll", () => {
   scrollPercent =
     (document.documentElement.scrollTop /
       (document.documentElement.scrollHeight -
         document.documentElement.clientHeight)) *
     100;
-};
+});
 // アニメーション
 const tick = () => {
   window.requestAnimationFrame(tick);
