@@ -93,6 +93,10 @@ scene.add(box, torus);
 renderer.setSize(sizes.width, sizes.height);
 renderer.setPixelRatio(window.devicePixelRatio);
 
+// ========================================
+// ユーティリティ関数
+// ========================================
+
 // 線形補間で滑らかに移動させる
 function lerp(x, y, a) {
   return (1 - a) * x + a * y;
@@ -102,6 +106,16 @@ function scalePercent(start, end) {
   return (scrollPercent - start) / (end - start);
 }
 
+// カメラをデフォルト位置に設定してボックスを見る
+function setCameraToDefault() {
+  camera.lookAt(box.position);
+  camera.position.set(
+    CAMERA_DEFAULT_POSITION.x,
+    CAMERA_DEFAULT_POSITION.y,
+    CAMERA_DEFAULT_POSITION.z
+  );
+}
+
 // スクロールアニメーション
 const animationScripts = [];
 
@@ -109,8 +123,7 @@ animationScripts.push({
   start: ANIMATION_RANGES.INTRO.start,
   end: ANIMATION_RANGES.INTRO.end,
   function() {
-    camera.lookAt(box.position);
-    camera.position.set(CAMERA_DEFAULT_POSITION.x, CAMERA_DEFAULT_POSITION.y, CAMERA_DEFAULT_POSITION.z);
+    setCameraToDefault();
     box.position.z = lerp(-15, 2, scalePercent(ANIMATION_RANGES.INTRO.start, ANIMATION_RANGES.INTRO.end));
     torus.position.z = lerp(10, -20, scalePercent(ANIMATION_RANGES.INTRO.start, ANIMATION_RANGES.INTRO.end));
   },
@@ -120,8 +133,7 @@ animationScripts.push({
   start: ANIMATION_RANGES.ROTATION.start,
   end: ANIMATION_RANGES.ROTATION.end,
   function() {
-    camera.lookAt(box.position);
-    camera.position.set(CAMERA_DEFAULT_POSITION.x, CAMERA_DEFAULT_POSITION.y, CAMERA_DEFAULT_POSITION.z);
+    setCameraToDefault();
     box.rotation.z = lerp(1, Math.PI, scalePercent(ANIMATION_RANGES.ROTATION.start, ANIMATION_RANGES.ROTATION.end));
   },
 });
