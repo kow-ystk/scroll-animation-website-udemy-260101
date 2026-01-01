@@ -78,7 +78,7 @@ const camera = new THREE.PerspectiveCamera(
 
 // レンダラー
 const renderer = new THREE.WebGLRenderer({
-  canvas: canvas,
+  canvas,
 });
 
 // オブジェクトを作成
