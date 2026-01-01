@@ -108,8 +108,8 @@ renderer.setPixelRatio(window.devicePixelRatio);
 // ========================================
 
 // 線形補間で滑らかに移動させる
-function lerp(x, y, a) {
-  return (1 - a) * x + a * y;
+function lerp(start, end, alpha) {
+  return (1 - alpha) * start + alpha * end;
 }
 
 function scalePercent(start, end) {
